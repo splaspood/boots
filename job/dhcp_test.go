@@ -106,7 +106,7 @@ func TestAllowPXE(t *testing.T) {
 				AllowPXE: tt.instance,
 			},
 		}
-		got := j.isPXEAllowed()
+		got := j.canPXE()
 		if got != tt.want {
 			t.Fatalf("unexpected return, want: %t, got %t", tt.want, got)
 		}

@@ -62,6 +62,7 @@ func (dhcpHandler) ServeDHCP(w dhcp4.ReplyWriter, req *dhcp4.Packet) {
 
 func getCircuitID(req *dhcp4.Packet) (string, error) {
 	var circuitID string
+	return "", nil
 	// Pulling option82 information from the packet (this is the relaying router)
 	// format: byte 1 is option number, byte 2 is length of the following array of bytes.
 	eightytwo, ok := req.GetOption(dhcp4.OptionRelayAgentInformation)

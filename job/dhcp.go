@@ -66,7 +66,7 @@ func (j Job) configureDHCP(rep, req *dhcp4.Packet) bool {
 	return true
 }
 
-func (j Job) isPXEAllowed() bool {
+func (j Job) canPXE() bool {
 	if j.hardware.AllowPXE {
 		return true
 	}
@@ -90,9 +90,9 @@ func (j Job) setPXEFilename(rep *dhcp4.Packet, isPacket, isARM, isUEFI bool) {
 
 		// ignore custom_ipxe because we always do dhcp for it and we'll want to do /nonexistent filename so
 		// nics don't timeout.... but why though?
-		if j.isPXEAllowed() == false && j.instance.OS.OsSlug != "custom_ipxe" {
+		if j.canPXE() == false && j.instance.OS.OsSlug != "custom_ipxe" {
 			err := errors.New("device should NOT be trying to PXE boot")
-			j.With("hardware.state", j.HardwareState(), "allow_pxe", j.isPXEAllowed(), "os", j.instance.OS.OsSlug).Info(err)
+			j.With("hardware.state", j.HardwareState(), "allow_pxe", j.canPXE(), "os", j.instance.OS.OsSlug).Info(err)
 			return
 		}
 		// custom_ipxe or rescue
@@ -110,7 +110,7 @@ func (j Job) setPXEFilename(rep *dhcp4.Packet, isPacket, isARM, isUEFI bool) {
 		} else {
 			filename = "undionly.kpxe"
 		}
-	} else if j.isPXEAllowed() == false {
+	} else if j.canPXE() == false {
 		// Always honor allow_pxe.
 		// We set a filename because if a machine is actually trying to PXE and nothing is sent it may hang for
 		// a while waiting for any possible ProxyDHCP packets and it would delay booting to disks and phoning-home.
