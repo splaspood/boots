@@ -177,15 +177,35 @@ func (j Job) HardwareState() string {
 	return ""
 }
 
-func (j Job) ServicesVersion() packet.ServicesVersion {
+func (j Job) ServicesVersion() string {
 	if h := j.hardware; h != nil && (*h).HardwareID() != "" {
-		sv := (*h).HardwareServicesVersion()
-		return sv.(packet.ServicesVersion) // asserting for now
+		return (*h).HardwareServicesVersion()
 	}
-	return packet.ServicesVersion{}
+	return ""
 }
 
 // CanWorkflow checks if workflow is allowed
 func (j Job) CanWorkflow() bool {
 	return (*j.hardware).HardwareAllowWorkflow()
+}
+
+func (j Job) OsieBaseURL() string {
+	if h := j.hardware; h != nil {
+		return (*j.hardware).OsieBaseURL()
+	}
+	return ""
+}
+
+func (j Job) KernelPath() string {
+	if h := j.hardware; h != nil {
+		return (*j.hardware).KernelPath()
+	}
+	return ""
+}
+
+func (j Job) InitrdPath() string {
+	if h := j.hardware; h != nil {
+		return (*j.hardware).InitrdPath()
+	}
+	return ""
 }

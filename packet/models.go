@@ -55,18 +55,6 @@ type InterfaceTinkerbell struct {
 	*DHCP
 }
 
-type Osie interface { // temp name
-
-}
-
-type OsieCacher struct {
-	*ServicesVersion
-}
-
-type OsieTinkerbell struct {
-	*Bootstrapper
-}
-
 // Hardware interface holds primary hardware methods
 type Hardware interface {
 	HardwareAllowPXE() bool
@@ -81,8 +69,11 @@ type Hardware interface {
 	HardwarePlanSlug() string
 	HardwarePlanVersionSlug() string
 	HardwareState() HardwareState
-	HardwareServicesVersion() Osie
+	HardwareServicesVersion() string
 	HardwareUEFI() bool
+	OsieBaseURL() string
+	KernelPath() string
+	InitrdPath() string
 }
 
 // HardwareCacher represents the old hardware data model for backward compatibility
@@ -119,8 +110,12 @@ type HardwareTinkerbell struct {
 }
 
 // NewDiscovery instantiates a Discovery struct from the json argument
-func NewDiscovery(j string) (*Discovery, error) {
+func NewDiscovery(b []byte) (*Discovery, error) {
 	var res Discovery
+
+	if string(b) == "" || string(b) == "{}" {
+		return nil, errors.New("empty response from db")
+	}
 
 	discoveryType := os.Getenv("DISCOVERY_TYPE")
 	switch discoveryType {
@@ -131,7 +126,10 @@ func NewDiscovery(j string) (*Discovery, error) {
 	default:
 		return nil, errors.New("invalid discovery type")
 	}
-	err := json.Unmarshal([]byte(j), &res)
+
+	// check to see if res is empty
+
+	err := json.Unmarshal(b, &res)
 	if err != nil {
 		return nil, errors.Wrap(err, "unmarshal json for discovery")
 	}
@@ -294,20 +292,20 @@ type DHCP struct {
 
 // Netboot holds details for a hardware to boot over network
 type Netboot struct {
-	AllowPXE      bool `json:"allow_pxe"`
-	AllowWorkflow bool `json:"allow_workflow"`
+	AllowPXE      bool `json:"allow_pxe"` // to be removed?
+	AllowWorkflow bool `json:"allow_workflow"` // to be removed?
 	IPXE          struct {
 		URL      string `json:"url"`
 		Contents string `json:"contents"`
 	} `json:"ipxe"`
-	Bootstrapper Bootstrapper `json:"bootstrapper"`
+	Osie Osie `json:"osie"`
 }
 
 // Bootstrapper is the bootstrapper to be used during netboot
-type Bootstrapper struct {
+type Osie struct {
+	BaseURL     string `json:"base_url"`
 	Kernel string `json:"kernel"`
 	Initrd string `json:"initrd"`
-	OS     string `json:"os"`
 }
 
 // Network holds hardware network details

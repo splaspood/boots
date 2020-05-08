@@ -41,7 +41,15 @@ func (d DiscoveryTinkerbell) Mode() string {
 
 func (d DiscoveryTinkerbell) Ip(mac net.HardwareAddr) IP {
 	// TODO
-	return IP{}
+	//addr, _, err := net.ParseCIDR(string(d.DHCP.IP))
+	//if err != nil {
+	//	return IP{}
+	//}
+	return IP{
+		Address: net.ParseIP(d.DHCP.IP),
+		Netmask: net.ParseIP("255.255.255.248"),
+		Gateway: d.DHCP.Gateway,
+	}
 }
 
 func (dt *DiscoveryTinkerbell) PrimaryDataMAC() MACAddr {
@@ -108,8 +116,9 @@ func (h HardwareTinkerbell) HardwareState() HardwareState {
 	return h.Metadata.State
 }
 
-func (h HardwareTinkerbell) HardwareServicesVersion() Osie {
-	return h.Netboot.Bootstrapper
+// dummy method for backward compatibility
+func (h HardwareTinkerbell) HardwareServicesVersion() string {
+	return ""
 }
 
 func (h HardwareTinkerbell) HardwareUEFI() bool {
@@ -119,4 +128,16 @@ func (h HardwareTinkerbell) HardwareUEFI() bool {
 func (h *HardwareTinkerbell) Interfaces() []Port {
 	var ports []Port
 	return ports
+}
+
+func (h *HardwareTinkerbell) OsieBaseURL() string {
+	return h.Netboot.Osie.BaseURL
+}
+
+func (h *HardwareTinkerbell) KernelPath() string {
+	return h.Netboot.Osie.Kernel
+}
+
+func (h *HardwareTinkerbell) InitrdPath() string {
+	return h.Netboot.Osie.Initrd
 }

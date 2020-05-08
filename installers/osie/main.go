@@ -64,7 +64,7 @@ func kernelParams(action, state string, j job.Job, s *ipxe.Script) {
 	s.Args("packet_action=${action}")
 	s.Args("packet_state=${state}")
 
-	if isCustomOsie(j) {
+	if isCustomOsie(j) { // is this check needed?
 		s.Args("packet_base_url=" + osieBaseUrl(j))
 	}
 
@@ -134,15 +134,21 @@ func modloopPath(j job.Job) string {
 }
 
 func kernelPath(j job.Job) string {
+	if j.KernelPath() != "" {
+		return j.KernelPath()
+	}
 	return "vmlinuz-${parch}"
 }
 
 func initrdPath(j job.Job) string {
+	if j.InitrdPath() != "" {
+		return j.InitrdPath()
+	}
 	return "initramfs-${parch}"
 }
 
 func isCustomOsie(j job.Job) bool {
-	if version := j.ServicesVersion(); version.Osie != "" {
+	if version := j.ServicesVersion(); version != "" {
 		return true
 	}
 	return false
@@ -150,8 +156,11 @@ func isCustomOsie(j job.Job) bool {
 
 // OsieBaseUrl returns the value of Osie Custom Service Version, or boots/osie
 func osieBaseUrl(j job.Job) string {
+	if u := j.OsieBaseURL(); u != "" {
+		return u
+	}
 	if isCustomOsie(j) {
-		return osieURL + "/" + j.ServicesVersion().Osie
+		return osieURL + "/" + j.ServicesVersion()
 	}
 	return osieURL + "/current"
 }
