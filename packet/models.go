@@ -279,12 +279,11 @@ type Manufacturer struct {
 // DHCP holds details for DHCP connection
 type DHCP struct {
 	MAC         *MACAddr      `json:"mac"`
-	IP          string        `json:"ip"`
+	IP          IP        `json:"ip"`
 	Hostname    string        `json:"hostname"`
 	LeaseTime   time.Duration `json:"lease_time"`
 	NameServers []string      `json:"name_servers"`
 	TimeServers []string      `json:"time_servers"`
-	Gateway     net.IP        `json:"gateway"`
 	Arch        string        `json:"arch"`
 	UEFI        bool          `json:"uefi"`
 	IfaceName   string        `json:"iface_name"`

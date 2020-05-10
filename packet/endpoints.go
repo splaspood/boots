@@ -44,7 +44,6 @@ func (c *Client) DiscoverHardwareFromDHCP(mac net.HardwareAddr, giaddr net.IP, c
 		Mac: mac.String(),
 	}
 	resp, err := c.tink.ByMAC(context.Background(), msg)
-	log.Println("json ", resp)
 
 	cacherTimer.ObserveDuration()
 	metrics.CacherRequestsInProgress.With(labels).Dec()

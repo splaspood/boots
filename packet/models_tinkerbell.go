@@ -40,15 +40,10 @@ func (d DiscoveryTinkerbell) Mode() string {
 }
 
 func (d DiscoveryTinkerbell) Ip(mac net.HardwareAddr) IP {
-	// TODO
-	//addr, _, err := net.ParseCIDR(string(d.DHCP.IP))
-	//if err != nil {
-	//	return IP{}
-	//}
 	return IP{
-		Address: net.ParseIP(d.DHCP.IP),
-		Netmask: net.ParseIP("255.255.255.248"),
-		Gateway: d.DHCP.Gateway,
+		Address: d.DHCP.IP.Address,
+		Netmask: d.DHCP.IP.Netmask,
+		Gateway: d.DHCP.IP.Gateway,
 	}
 }
 
