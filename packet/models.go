@@ -23,9 +23,10 @@ type Discovery interface {
 	Instance() *Instance
 	Mac() net.HardwareAddr
 	Mode() string
-	Ip(addr net.HardwareAddr) IP
+	GetIp(addr net.HardwareAddr) IP
+	GetMac(ip net.IP) net.HardwareAddr
 	DnsServers() []net.IP
-	LeaseTime() time.Duration
+	LeaseTime(mac net.HardwareAddr) time.Duration
 	Hostname() (string, error)
 	Hardware() *Hardware
 	SetMac(mac net.HardwareAddr)
@@ -44,7 +45,8 @@ type DiscoveryTinkerbell struct {
 }
 
 type Interface interface {
-	Name() string
+	//Name() string //needed?
+	//MAC() net.HardwareAddr
 }
 
 type InterfaceCacher struct {
@@ -52,14 +54,14 @@ type InterfaceCacher struct {
 }
 
 type InterfaceTinkerbell struct {
-	*DHCP
+	*NetworkInterface
 }
 
 // Hardware interface holds primary hardware methods
 type Hardware interface {
-	HardwareAllowPXE() bool
-	HardwareAllowWorkflow() bool
-	HardwareArch() string
+	HardwareAllowPXE(mac net.HardwareAddr) bool
+	HardwareAllowWorkflow(mac net.HardwareAddr) bool
+	HardwareArch(mac net.HardwareAddr) string
 	HardwareBondingMode() BondingMode
 	HardwareFacilityCode() string
 	HardwareID() string
@@ -70,10 +72,10 @@ type Hardware interface {
 	HardwarePlanVersionSlug() string
 	HardwareState() HardwareState
 	HardwareServicesVersion() string
-	HardwareUEFI() bool
-	OsieBaseURL() string
-	KernelPath() string
-	InitrdPath() string
+	HardwareUEFI(mac net.HardwareAddr) bool
+	OsieBaseURL(mac net.HardwareAddr) string
+	KernelPath(mac net.HardwareAddr) string
+	InitrdPath(mac net.HardwareAddr) string
 }
 
 // HardwareCacher represents the old hardware data model for backward compatibility
@@ -103,9 +105,7 @@ type HardwareCacher struct {
 // HardwareTinkerbell represents the new hardware data model for tinkerbell
 type HardwareTinkerbell struct {
 	ID       string    `json:"id"`
-	DHCP     DHCP      `json:"dhcp"`
-	Netboot  Netboot   `json:"netboot"`
-	Network  []Network `json:"network"`
+	Network  Network `json:"network"`
 	Metadata Metadata  `json:"metadata"`
 }
 
@@ -276,6 +276,11 @@ type Manufacturer struct {
 	Slug string `json:"slug"`
 }
 
+type NetworkInterface struct {
+	DHCP    DHCP    `json:"dhcp,omitempty"`
+	Netboot Netboot `json:"netboot,omitempty"`
+}
+
 // DHCP holds details for DHCP connection
 type DHCP struct {
 	MAC         *MACAddr      `json:"mac"`
@@ -286,7 +291,7 @@ type DHCP struct {
 	TimeServers []string      `json:"time_servers"`
 	Arch        string        `json:"arch"`
 	UEFI        bool          `json:"uefi"`
-	IfaceName   string        `json:"iface_name"`
+	IfaceName   string        `json:"iface_name"` // to be removed?
 }
 
 // Netboot holds details for a hardware to boot over network
@@ -309,8 +314,8 @@ type Osie struct {
 
 // Network holds hardware network details
 type Network struct {
-	DHCP    DHCP    `json:"dhcp,omitempty"`
-	Netboot Netboot `json:"netboot,omitempty"`
+	Interfaces []NetworkInterface `json:"interfaces,omitempty"`
+	Default NetworkInterface `json:"default,omitempty"`
 }
 
 // Metadata holds the hardware metadata

@@ -5,13 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-	"log"
 	"net"
 
-	"github.com/tinkerbell/tink/protos/hardware"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/tinkerbell/boots/metrics"
+	"github.com/tinkerbell/tink/protos/hardware"
 )
 
 const mimeJSON = "application/json"
@@ -56,7 +55,6 @@ func (c *Client) DiscoverHardwareFromDHCP(mac net.HardwareAddr, giaddr net.IP, c
 	if err != nil {
 		return nil, errors.New("marshalling tink hardware")
 	}
-	log.Println("hellllllllo hardware ", string(b))
 
 	// or maybe just check for error?
 	if string(b) != "{}" {

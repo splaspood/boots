@@ -85,6 +85,8 @@ github.com/kdeng3849/tink v0.0.0-20200507192120-b9939df372ed h1:MaoRaoMIs247ccww
 github.com/kdeng3849/tink v0.0.0-20200507192120-b9939df372ed/go.mod h1:nOwtva5LoT5snDi8xe48ufG6NYWXjeE9p1WCE5rnHhA=
 github.com/kdeng3849/tink v0.0.0-20200508184633-16b3dd74742d h1:kQXB9c6ItWPwsqLyEoYSZn3Qx/CEw/yt45EkpwOdRjE=
 github.com/kdeng3849/tink v0.0.0-20200508184633-16b3dd74742d/go.mod h1:nOwtva5LoT5snDi8xe48ufG6NYWXjeE9p1WCE5rnHhA=
+github.com/kdeng3849/tink v0.0.0-20200513202719-57f7804189c4 h1:4XKzKjDL/fEZ2tgaEmMG7srdNv76+1I1jh+X0ESfnm0=
+github.com/kdeng3849/tink v0.0.0-20200513202719-57f7804189c4/go.mod h1:nOwtva5LoT5snDi8xe48ufG6NYWXjeE9p1WCE5rnHhA=
 github.com/kisielk/errcheck v1.1.0/go.mod h1:EZBBE59ingxPouuu3KfxchcWSUPOHkagtvWXihfKN4Q=
 github.com/kisielk/errcheck v1.2.0/go.mod h1:/BMXB+zMLi60iA8Vv6Ksmxu/1UDYcXs4uQLJ+jE2L00=
 github.com/kisielk/gotool v1.0.0/go.mod h1:XhKaO+MFFWcvkIS/tQcRk01m1F5IRFswLeQ+oQHNcck=
