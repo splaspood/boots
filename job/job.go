@@ -14,7 +14,7 @@ import (
 )
 
 var client *packet.Client
-var provisioningEngineName string
+var provisionerEngineName string
 
 // SetClient sets the client used to interact with the api.
 func SetClient(c *packet.Client) {
@@ -23,8 +23,8 @@ func SetClient(c *packet.Client) {
 
 // SetProvisioningEngineName sets the provisioning engine name used
 // for this instance of boots
-func SetProvisioningEngineName(engineName string) {
-	provisioningEngineName = engineName
+func SetProvisionerEngineName(engineName string) {
+	provisionerEngineName = engineName
 }
 
 // Job this comment is useless
@@ -50,7 +50,7 @@ func (j Job) AllowPxe() bool {
 }
 
 // ProvisioningEngineName returns the current provisioning engine name
-// as defined by the env var PROVISIONING_ENGINE_NAME supplied at runtime
+// as defined by the env var PROVISIONER_ENGINE_NAME supplied at runtime
 func (j Job) ProvisioningEngineName() string {
 	return provisioningEngineName
 }
